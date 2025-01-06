@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sheets Website</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Optional -->
+</head>
+<body>
+  <h1>Filtered Items from Google Sheets</h1>
+  <div id="data-container"></div>
+  
+  <script>
+    // Replace with your Spreadsheet ID and API Key
+    const SPREADSHEET_ID = "your-spreadsheet-id";
+    const API_KEY = "your-api-key";
+    const SHEET_NAME = "Sheet1";
+
+    // Fetch data from Google Sheets
+    async function fetchData() {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      return data.values;
+    }
+
+    // Display data based on criteria
+    async function displayData() {
+      const data = await fetchData();
+      const container = document.getElementById("data-container");
+
+      // Example: Display rows where the first column contains "Criteria"
+      const filteredData = data.filter(row => row[0].includes("Criteria"));
+
+      // Render data
+      filteredData.forEach(row => {
+        const item = document.createElement("div");
+        item.textContent = row.join(", ");
+        container.appendChild(item);
+      });
+    }
+
+    displayData();
+  </script>
+</body>
+</html>
