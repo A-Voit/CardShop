@@ -1,0 +1,26 @@
+name: Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Environment Variables
+      run: |
+        echo "SPREADSHEET_ID=${{ secrets.SPREADSHEET_ID }}" >> $GITHUB_ENV
+        echo "API_KEY=${{ secrets.API_KEY }}" >> $GITHUB_ENV
+        echo "SHEET_NAME=${{ secrets.SHEET_NAME }}" >> $GITHUB_ENV
+
+    - name: Deploy to GitHub Pages
+      run: |
+        npm install
+        npm run build
+        npx gh-pages -d build
